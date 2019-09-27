@@ -2,7 +2,11 @@
 Procesamiento de imágenes costeras 
 
 El proyecto consiste en procesar imágenes de la costa, con el fin de segmentar las distintas zonas de la playa, tales como:
--1)Arena Seca -(2)Arena Húmeda -3)Rompiente -4)Agua -5)Roca
+-1)Arena Seca 
+-(2)Arena Húmeda 
+-3)Rompiente 
+-4)Agua 
+-5)Roca
 
 La fuente de datos pertenecen al Instituro Argentino de Oceanografía (IADO). Hay algunas cámaras ubicadas en el balneario de Pehuen-Có-Buenos Aires(Argentina). Los datos manejados en este proyecto corresponden a videos e imágenes de la cámara frontal ubicada en este lugar.
 

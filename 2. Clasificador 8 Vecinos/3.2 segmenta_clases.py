@@ -64,7 +64,6 @@ clasif=estado.reshape(filx,colx)
 """---------------------------------------------------------------------------- 
 Segmentación de imagen 
 ----------------------------------------------------------------------------"""
-
 """-----------------------------------
 DESCRIPCIÓN DE COLORES:
  ------------------------------------- 
@@ -94,7 +93,6 @@ def pinta_clase(clase,name):
     #Asigna valores RGB a los pixeles fuera de la región de interés
     for i in range(xmin,xmax):
         for j in range(ymin,ymax):
-#            if final[i,j,0]<clase or final[i,j,0]>clase:
             if final[i,j,0]!=clase:
                 final[i,j,:]=img1[i,j,:]
                 

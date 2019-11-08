@@ -147,4 +147,4 @@ plot_confusion_matrix(cm, [0,1,2,3,4])
 Guardar modelo
 ----------------------------------------------------------------------------"""
 from sklearn.externals import joblib 
-#joblib.dump(model, '2.1 modelo8.pkl') 
+#joblib.dump(model, '2.1 modelo8_RF.pkl') 

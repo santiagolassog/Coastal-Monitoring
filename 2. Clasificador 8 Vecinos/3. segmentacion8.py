@@ -28,7 +28,7 @@ def predecir(X,ruta):
 Cargar, recorrer imagen y obtener valores RGB 
 ----------------------------------------------------------------------------""" 
 #Leer imagen a segmentar
-img1 = mg.imread('Resultados/1.img_der.jpg') 
+img1 = mg.imread('Resultados/mean.jpg') 
 #Limita a leer solo 3 capas de la imagen "0:3"
 img1 = img1[:,:,0:3]
 #Tamaño de la imagen
@@ -45,11 +45,12 @@ for i in range(1,(fil-1)):
         #Asigna el valor de matriz en la posición "cont" del pixel actual
         arr[cont] = matriz 
         cont+=1
+
 """---------------------------------------------------------------------------- 
 Aplicar modelo para predecir
 ----------------------------------------------------------------------------""" 
 #Ruta y nombre del modelo
-ruta='2.1 modelo8.pkl' 
+ruta='2.1 modelo8_RF.pkl' 
 #Pasar array de valores RGB para predecir
 estado=predecir(arr,ruta)
 clasif=estado.reshape(fil-2,col-2)
@@ -75,5 +76,5 @@ for clase in paleta.keys():
 #Hacer plot de la imagen procesada
 plt.imshow(final)
 #Guardar imagen segmentada
-img_final = Image.fromarray(final)
-img_final.save('Resultados/1.img_derPROCESS.jpg')
+#img_final = Image.fromarray(final)
+#img_final.save('Resultados/MeanPROCESS.jpg')

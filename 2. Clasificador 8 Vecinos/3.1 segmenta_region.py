@@ -28,7 +28,7 @@ def predecir(X,ruta):
 Cargar imagen: Definir región a procesar y obtener sus valores RGB 
 ----------------------------------------------------------------------------""" 
 #Leer imagen a segmentar
-img1 = mg.imread('Resultados/mean_mc.jpg') 
+img1 = mg.imread('Resultados/mean.jpg') 
 #Limita a leer solo 3 capas de la imagen (0:3)
 img1 = img1[:,:,0:3]
 #Tamaño de la imagen
@@ -57,7 +57,7 @@ for i in range(xmin,xmax):
 Aplicar modelo para predecir
 ----------------------------------------------------------------------------""" 
 #Ruta y nombre del modelo
-ruta='2.1 modelo8_7135.pkl' 
+ruta='2.1 modelo8_ETC.pkl' 
 #Pasar array de valores RGB para predecir
 estado=predecir(arr,ruta)
 clasif=estado.reshape(filx,colx)
@@ -88,18 +88,18 @@ for clase in paleta.keys():
     final[final[:,:,0]==int(clase)] = paleta[clase]
 
 #Hacer plot de la imagen procesada
-plt.imshow(final)
-    
+plt.imshow(final[xmin:xmax,ymin:ymax,:])
+
 #Guardar imagen segmentada
-img_final = Image.fromarray(final)
-img_final.save('Resultados/mean_mc2.jpg')
+img_final = Image.fromarray(final[xmin:xmax,ymin:ymax,:])
+img_final.save('Resultados/1. Region_segmentada_RF.jpg')
 
 """---------------------------------------
 Valores individuales para pintar por clase
 ------------------------------------------
 #final[final[:,:,0]==0] = (0,0,255)
 #final[final[:,:,0]==1] = (255,255,0)
-#final[final[:,:,0]==2] = (255,0,255)
-#final[final[:,:,0]==3] = (0,255,255)
+##final[final[:,:,0]==2] = (255,0,255)
+##final[final[:,:,0]==3] = (0,255,255)
 #final[final[:,:,0]==4] = (255,0,0)
 ---------------------------------------"""

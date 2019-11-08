@@ -28,7 +28,7 @@ def predecir(X,ruta):
 Cargar imagen: Definir región a procesar y obtener sus valores RGB 
 ----------------------------------------------------------------------------""" 
 #Leer imagen a segmentar
-img1 = mg.imread('Resultados/mean_mc.jpg') 
+img1 = mg.imread('Resultados/mean.jpg') 
 #Limita a leer solo 3 capas de la imagen (0:3)
 img1 = img1[:,:,0:3]
 #Tamaño de la imagen
@@ -57,13 +57,14 @@ for i in range(xmin,xmax):
 Aplicar modelo para predecir
 ----------------------------------------------------------------------------""" 
 #Ruta y nombre del modelo
-ruta='2.1 modelo8_100.pkl' 
+ruta='2.1 modelo8_ETC.pkl' 
 #Pasar array de valores RGB para predecir
 estado=predecir(arr,ruta)
 clasif=estado.reshape(filx,colx)
 """---------------------------------------------------------------------------- 
 Segmentación de imagen 
 ----------------------------------------------------------------------------"""
+
 """-----------------------------------
 DESCRIPCIÓN DE COLORES:
  ------------------------------------- 
@@ -78,36 +79,31 @@ DESCRIPCIÓN DE COLORES:
 
 list_color=[(0,0,255),(255,255,0),(255,0,255),(0,255,255),(255,0,0)]
 
-def pinta_clase(clase,name):
+def segmentar(clase,name):
     #Crear matriz de ceros para la imagen segmentada
     final=np.zeros((fil,col,3),'uint8')
-    #Asigna imagen original al array final
-    final=mg.imread('Resultados/mean_mc.jpg') 
-    final = final[:,:,0:3]
-    #Guarda en la banda 0 del array(final) los valores de clasif(predicción)
-    final[xmin:xmax,ymin:ymax,0]=clasif    
-    #Reabrir imagen original para asignar valores diferentes a la clase evaluada
-    img1 = mg.imread('Resultados/mean_mc.jpg') 
-    img1 = img1[:,:,0:3]
-
-    #Asigna valores RGB a los pixeles fuera de la región de interés
-    for i in range(xmin,xmax):
-        for j in range(ymin,ymax):
-            if final[i,j,0]!=clase:
-                final[i,j,:]=img1[i,j,:]
-                
-    #Asignar color a los pixeles según clase evaluada
-    final[final[:,:,0]==clase]=list_color[clase]
+    #Tamaño de máscara boolean
+    m,n,c=img1.shape
+    #Máscara de ceros tipo boolean
+    mask=np.zeros((m,n),dtype=bool)
+    #Los valores de la matriz de clasificación (clasif) iguales a la clase,
+    #se almacenan en Mask, en las posiciones de la región de interés
+    mask[xmin:xmax,ymin:ymax]=(clasif==clase)
+    #Se hace una copia de la imagen original
+    final = np.copy(img1)
+    #Para los pixeles de la imagen final en las posiciones True de la máscara
+    #se pinta del color correspondiente
+    final[mask] = list_color[clase]
     #Guardar imagen segmentada
-    img_final = Image.fromarray(final)
-    plt.imshow(img_final)
+    img_final = Image.fromarray(final[xmin:xmax,ymin:ymax,:])
+    plt.imshow(final)
     img_final.save('Resultados/'+name)              
 
-pinta_clase(0,'mean_mcAGUA.jpg')
-pinta_clase(1,'mean_mcHUMEDA.jpg')
-pinta_clase(2,'mean_mcROCA.jpg')
-pinta_clase(3,'mean_mcROMPIENTE.jpg')
-pinta_clase(4,'mean_mcSECA.jpg')
+segmentar(0,'2. Clase_agua.jpg')
+segmentar(1,'3. Clase_humeda.jpg')
+segmentar(2,'4. Clase_roca.jpg')
+segmentar(3,'5. Clase_rompiente.jpg')
+segmentar(4,'6. Clase_seca.jpg')
 
 """---------------------------------------
 Valores individuales para pintar por clase

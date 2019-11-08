@@ -11,7 +11,7 @@ from PIL import Image
 Leer archivo de datos
 ----------------------------------------------------------------------------""" 
 import pandas as pd
-data = pd.read_csv("1.1 dataset8.csv", sep=';')
+data = pd.read_csv("1.1 dataset8_7135.csv", sep=';')
 data["Zona"]= pd.factorize(data["Zona"])[0]
 """---------------------------------------------------------------------------- 
 Leer CSV y crea un imagen de los valores RGB de cada pixel 
@@ -43,11 +43,29 @@ Y = data[data.columns[-1]]
 #Mostrar X e Y: 4 primeras filas
 print(X[:4])
 print(Y[:4])
+
+#Balancear los datos de las clases
+from imblearn.over_sampling import SMOTE
+from collections import Counter
+
+print('Original dataset shape %s' % Counter(Y))
+sm = SMOTE(random_state=100)
+X_res, Y_res = sm.fit_resample(X,Y)
+print('Resampled dataset shape %s' % Counter(Y_res))
+print(X_res[:4])
+print(Y_res[:4])
+
 #Hace un random de los índices de los datos
-index = np.random.permutation(len(Y))
+#index = np.random.permutation(len(Y))
 #DataFrame to Array
-X=X.as_matrix()
-Y=Y.as_matrix()
+#X=X.as_matrix()
+#Y=Y.as_matrix()
+
+#Hace un random de los índices de los datos
+index = np.random.permutation(len(Y_res))
+X=X_res
+Y=Y_res
+
 #Separación de datos 70/30
 split = 0.3
 X_train = X[index[int(split*len(Y)):]]
@@ -92,11 +110,14 @@ def plot_confusion_matrix(cm, classes,
 """---------------------------------------------------------------------------- 
 Entrenamiento
 ----------------------------------------------------------------------------"""
-from sklearn.ensemble import RandomForestClassifier
+#Clasificadores
+from sklearn.ensemble import RandomForestClassifier,ExtraTreesClassifier
 from sklearn.metrics import accuracy_score
 #n_estimators = number of trees in the random forest
-model=RandomForestClassifier(max_depth=10, n_estimators=100, max_features=27)
+#model=RandomForestClassifier(max_depth=None, n_estimators=100, max_features=27)
+model=ExtraTreesClassifier(max_depth=None, n_estimators=100, max_features=27)
 model.fit(X_train,Y_train)
+
 #Predecir valores
 score_train = model.score(X_train,Y_train)
 score_test = model.score(X_test,Y_test)
@@ -106,20 +127,24 @@ print(score_train)
 print(score_test)
 #Porcentaje de importancia por RGB
 print(model.feature_importances_)
+
 """---------------------------------------------------------------------------- 
 Salida del modelo junto con la matriz de confusión
 ----------------------------------------------------------------------------"""
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix,classification_report
 #Predicción con datos del 30% X_test
 predicted = model.predict(X_test)
+#Cantidad de muestras por clase
+print(classification_report(Y_test,predicted))
 #Cambiar tipo de dato
 A = predicted.astype(int)
 accuracy = accuracy_score(Y_test, A) 
 print(accuracy)
 cm = confusion_matrix(Y_test, A)
 plot_confusion_matrix(cm, [0,1,2,3,4])
+#plot_confusion_matrix(cm, ['Water','Wet sand','Rock','Breaker zone','Dry sand'])
 """---------------------------------------------------------------------------- 
 Guardar modelo
 ----------------------------------------------------------------------------"""
 from sklearn.externals import joblib 
-joblib.dump(model, '2.1 modelo8.pkl') 
+#joblib.dump(model, '2.1 modelo8.pkl') 
